@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science 8: Digestive System Reviewer</title>
+    <!-- Tailwind CSS for clean, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-emerald-600 text-white shadow-md py-4 px-6">
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">Science 8 Reviewer</h1>
+            <span class="bg-emerald-700 text-xs px-3 py-1.5 rounded-full font-medium">Topic: Digestive System</span>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow flex items-center justify-center p-4 md:p-8">
+        <div class="w-full max-w-2xl bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8 transition-all duration-300">
+            
+            <!-- Progress Tracker -->
+            <div id="progress-container" class="mb-6">
+                <div class="flex justify-between items-center text-sm font-semibold text-slate-500 mb-2">
+                    <span id="progress-text">Questions remaining: 20</span>
+                    <span id="score-text" class="text-emerald-600">Mastered: 0/20</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quiz-screen">
+                <!-- Question -->
+                <h2 id="question-text" class="text-lg md:text-xl font-bold text-slate-800 mb-6 leading-relaxed">
+                    Loading question...
+                </h2>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="space-y-3 mb-6">
+                    <!-- Dynamic choices go here -->
+                </div>
+
+                <!-- Feedback Section -->
+                <div id="feedback-panel" class="hidden p-4 rounded-xl mb-6 border transition-all duration-300">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span id="feedback-icon" class="text-lg"></span>
+                        <h4 id="feedback-title" class="font-bold text-base"></h4>
+                    </div>
+                    <p id="feedback-text" class="text-sm leading-relaxed"></p>
+                </div>
+
+                <!-- Control Button -->
+                <div class="flex justify-end">
+                    <button id="action-btn" class="hidden bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 px-6 rounded-lg transition duration-200">
+                        Next
+                    </button>
+                </div>
+            </div>
+
+            <!-- Completion Screen -->
+            <div id="completion-screen" class="hidden text-center py-8">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Reviewer Cleared!</h2>
+                <p class="text-slate-600 mb-6">You have answered all 20 questions correctly and completed the reviewer.</p>
+                <button id="restart-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-8 rounded-lg shadow-sm transition duration-200">
+                    Try Again
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200 bg-white">
+        Science 8 Interactive Reviewer • Practice until mastery
+    </footer>
+
+    <script>
+        // Question Pool Data
+        const masterQuestions = [
+            {
+                id: 1,
+                stem: "What best describes the process of digestion?",
+                correct: "Breaking food into simpler and usable forms",
+                incorrect: [
+                    "Moving nutrients into the bloodstream",
+                    "Chewing and swallowing solid food",
+                    "Mixing food with oxygen for cell use"
+                ],
+                rationale: "Digestion is the biochemical and mechanical breakdown of large, complex food particles into simpler, water-soluble molecules that can be readily utilized by the body's cells."
+            },
+            {
+                id: 2,
+                stem: "What is the primary role of the small intestine?",
+                correct: "Absorbs digested nutrients from food",
+                incorrect: [
+                    "Absorbs water into the bloodstream",
+                    "Breaking proteins into small units",
+                    "Eliminating solid waste from the body"
+                ],
+                rationale: "The small intestine is highly adapted for nutrient absorption. Its walls are packed with tiny, finger-like projections called villi that maximize nutrient uptake into the bloodstream."
+            },
+            {
+                id: 3,
+                stem: "Which part of the digestive system absorbs most of the water?",
+                correct: "Large intestine",
+                incorrect: [
+                    "Small intestine",
+                    "Esophagus",
+                    "Rectum"
+                ],
+                rationale: "The primary function of the large intestine is to absorb remaining water and salts from undigested material, helping solid waste take shape before excretion."
+            },
+            {
+                id: 4,
+                stem: "What digestive process starts inside the mouth?",
+                correct: "Mechanical and chemical food breakdown",
+                incorrect: [
+                    "Absorption of amino acids and glucose",
+                    "Chemical digestion of dietary proteins",
+                    "Neutralization of stomach acid content"
+                ],
+                rationale: "Digestion starts immediately in the mouth. Chewing acts as a mechanical breakdown, while salivary amylase begins the chemical digestion of carbohydrates (starches)."
+            },
+            {
+                id: 5,
+                stem: "What enzyme breaks down starch into simpler sugars?",
+                correct: "Amylase",
+                incorrect: [
+                    "Pepsin",
+                    "Lipase",
+                    "Maltase"
+                ],
+                rationale: "Amylase is the enzyme responsible for initiating the chemical digestion of starch. It is produced by both the salivary glands and the pancreas."
+            },
+            {
+                id: 6,
+                stem: "Which best compares mechanical and chemical digestion?",
+                correct: "Mechanical breaks food physically; chemical uses enzymes.",
+                incorrect: [
+                    "Mechanical adds enzymes; chemical adds pressure.",
+                    "Mechanical store food; chemicals remove water.",
+                    "Mechanical absorbs nutrients; chemical stores them."
+                ],
+                rationale: "Mechanical digestion involves physical breakdown (like chewing, grinding, and churning), while chemical digestion alters the molecular structure of food using digestive enzymes."
+            },
+            {
+                id: 7,
+                stem: "What most likely causes frequent diarrhea after eating spoiled food?",
+                correct: "Rapid water loss due to intestinal irritation.",
+                incorrect: [
+                    "Increased bile production from the liver.",
+                    "Reduced saliva leading to poor digestion.",
+                    "Blocked movement in the large intestine."
+                ],
+                rationale: "When pathogens or toxins in spoiled food irritate the lining of the digestive tract, the intestines contract rapidly to flush out the irritant, preventing water absorption and causing diarrhea."
+            },
+            {
+                id: 8,
+                stem: "A person cannot digest fats properly. What is the most likely cause?",
+                correct: "The liver has stopped producing bile.",
+                incorrect: [
+                    "The pancreas no longer makes amylase.",
+                    "The gallbladder fails to absorb bile.",
+                    "The stomach does not churn fats well."
+                ],
+                rationale: "Bile, which is produced by the liver, emulsifies large fat droplets into tiny particles so that pancreatic enzymes (lipase) can digest them efficiently."
+            },
+            {
+                id: 9,
+                stem: "If the villi in the small intestine are damaged, what will happen?",
+                correct: "Absorption of nutrients will be reduced.",
+                incorrect: [
+                    "Digestion of proteins will increase greatly.",
+                    "Water will not be absorbed efficiently.",
+                    "Enzymes will stop being produced fully."
+                ],
+                rationale: "Villi are tiny projections designed to increase surface area for nutrient absorption. If they are flattened or damaged, the body can no longer absorb nutrients effectively, leading to nutritional deficiencies."
+            },
+            {
+                id: 10,
+                stem: "What happens if the pancreas stops releasing its enzymes?",
+                correct: "Carbohydrates and fats won't digest well.",
+                incorrect: [
+                    "The stomach will become overly acidic.",
+                    "Bile production will increase rapidly.",
+                    "The esophagus will stop moving food."
+                ],
+                rationale: "The pancreas secretes vital enzymes (including amylase, lipase, and trypsin) into the small intestine to complete the digestion of starches, proteins, and lipids."
+            },
+            {
+                id: 11,
+                stem: "How does chewing food with saliva help in the digestive process?",
+                correct: "It starts starch digestion and moistens food for swallowing.",
+                incorrect: [
+                    "It cools the food before it reaches the stomach.",
+                    "It releases acid to break down large fats early.",
+                    "It forces food into the stomach through strong pressure."
+                ],
+                rationale: "Saliva contains water to moisten dry food, mucin to lubricate it for passage, and amylase to start chemical digestion of complex carbohydrates."
+            },
+            {
+                id: 12,
+                stem: "Which of the following is not a reason why food must become bolus and then chyme?",
+                correct: "To help food pass directly into the large intestine",
+                incorrect: [
+                    "To allow easier movement through the digestive tract",
+                    "To improve enzyme access during chemical digestion",
+                    "To ensure that the mechanical and chemical breakdown continues"
+                ],
+                rationale: "Food must pass through the stomach and small intestine for full breakdown and nutrient uptake before entering the large intestine. It does not skip these steps."
+            },
+            {
+                id: 13,
+                stem: "After gallbladder removal, why must fats be limited?",
+                correct: "Bile can no longer be stored and timed.",
+                incorrect: [
+                    "Protein breakdown becomes less effective",
+                    "Acid levels in the stomach decrease",
+                    "Enzyme production is totally stopped"
+                ],
+                rationale: "The gallbladder holds and concentrates bile to release it precisely when high-fat foods enter the small intestine. Without it, bile continuously drips from the liver in small quantities, making heavy fats hard to process."
+            },
+            {
+                id: 14,
+                stem: "Which action is an example of mechanical digestion?",
+                correct: "Teeth grinding food into small pieces.",
+                incorrect: [
+                    "Enzymes break down starch to sugar.",
+                    "Bile turning fats into small droplets.",
+                    "Pepsin splits protein into peptides."
+                ],
+                rationale: "Teeth physically break down large food chunks into smaller, swallowable pieces, changing the size and surface area without altering the chemical composition of the food molecules."
+            },
+            {
+                id: 15,
+                stem: "Which does not belong to the group?",
+                correct: "Salivary Glands",
+                incorrect: [
+                    "Esophagus",
+                    "Large intestine",
+                    "Rectum"
+                ],
+                rationale: "The esophagus, large intestine, and rectum are parts of the alimentary canal (the continuous tube where food passes), while salivary glands are accessory organs that aid digestion from the outside."
+            },
+            {
+                id: 16,
+                stem: "After attending a school fair, several students developed frequent watery stools. The school nurse reminds them to drink plenty of fluids while monitoring their condition. Why is this advice important?",
+                correct: "Diarrhea causes the body to lose large amounts of water and electrolytes.",
+                incorrect: [
+                    "Drinking more water will immediately stop diarrhea.",
+                    "Water helps kill the microorganisms causing diarrhea.",
+                    "Diarrhea only affects the stomach, so hydration is not important."
+                ],
+                rationale: "Frequent watery stools prevent the large intestine from absorbing fluids properly. This leads to rapid dehydration and a dangerous loss of vital minerals (electrolytes), making rehydration critical."
+            },
+            {
+                id: 17,
+                stem: "Miguel has been experiencing constipation for several days. He wants to prevent it from happening again without relying on medication. Which daily habit is most likely to help?",
+                correct: "Increasing fiber intake, drinking more water, and exercising regularly",
+                incorrect: [
+                    "Drinking more fruit juice while reducing water intake",
+                    "Eating fewer meals to give the digestive system more rest",
+                    "Avoiding foods with natural fiber to reduce bowel movement frequency"
+                ],
+                rationale: "Constipation occurs when waste moves too slowly through the large intestine, drying it out. Dietary fiber adds bulk to stools, water keeps them soft, and exercise helps stimulate intestinal muscle contractions."
+            },
+            {
+                id: 18,
+                stem: "Four classmates ate lunch together. A few hours later, only the two who ate the chicken sandwich developed vomiting, stomach cramps, and diarrhea. Which conclusion is best supported by the evidence?",
+                correct: "The chicken sandwich was the most likely source of contamination.",
+                incorrect: [
+                    "The symptoms were caused by eating lunch too quickly.",
+                    "The students became sick because they skipped breakfast.",
+                    "The symptoms were caused by stress from school."
+                ],
+                rationale: "When multiple people consume different combinations of food and only those who ate a specific shared ingredient fall ill, that ingredient is highly suspected of containing harmful bacteria or toxins."
+            },
+            {
+                id: 19,
+                stem: "Anna notices that she develops bloating and stomach cramps after drinking milk, but she feels fine after eating rice, fruits, and vegetables. Which recommendation best addresses her condition while helping her maintain good nutrition?",
+                correct: "Choose lactose-free or low-lactose dairy products instead of regular milk.",
+                incorrect: [
+                    "Avoid all foods that contain carbohydrates.",
+                    "Drink more milk so her body becomes used to lactose.",
+                    "Stop eating all foods that contain protein."
+                ],
+                rationale: "Anna likely lacks sufficient lactase enzymes to digest lactose (milk sugar). Lactose-free dairy products or plant-based alternatives allow her to get essential nutrients like calcium without digestive stress."
+            },
+            {
+                id: 20,
+                stem: "Paolo often experiences a burning sensation in his chest after eating large, spicy meals late at night. His doctor recommends changing one eating habit first. Which advice is most appropriate?",
+                correct: "Eat smaller meals and avoid lying down immediately after eating.",
+                incorrect: [
+                    "Drink more carbonated beverages after meals to aid digestion.",
+                    "Skip dinner whenever symptoms occur.",
+                    "Eat spicy foods only during breakfast instead of dinner."
+                ],
+                rationale: "A burning chest sensation (heartburn/acid reflux) happens when stomach acid escapes upward into the esophagus. Eating smaller meals prevents excess pressure on the lower esophageal sphincter, and staying upright lets gravity help keep the acid down."
+            }
+        ];
+
+        // Application State variables
+        let questionPool = [];
+        let totalQuestionsCount = masterQuestions.length;
+        let masteredCount = 0;
+        let isAnswered = false;
+
+        // Elements
+        const quizScreen = document.getElementById('quiz-screen');
+        const completionScreen = document.getElementById('completion-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackPanel = document.getElementById('feedback-panel');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const actionBtn = document.getElementById('action-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const progressText = document.getElementById('progress-text');
+        const scoreText = document.getElementById('score-text');
+        const progressBar = document.getElementById('progress-bar');
+
+        // Initialize Reviewer
+        function initReviewer() {
+            questionPool = [...masterQuestions];
+            masteredCount = 0;
+            updateProgress();
+            quizScreen.classList.remove('hidden');
+            completionScreen.classList.add('hidden');
+            loadNextQuestion();
+        }
+
+        // Shuffle Array helper
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Update Progress UI
+        function updateProgress() {
+            const dynamicProgress = (masteredCount / totalQuestionsCount) * 100;
+            progressBar.style.width = `${dynamicProgress}%`;
+            progressText.innerText = `Questions remaining in loop: ${questionPool.length}`;
+            scoreText.innerText = `Mastered: ${masteredCount}/${totalQuestionsCount}`;
+        }
+
+        // Display Active Question
+        function loadNextQuestion() {
+            if (questionPool.length === 0) {
+                showCompletion();
+                return;
+            }
+
+            isAnswered = false;
+            feedbackPanel.classList.add('hidden');
+            actionBtn.classList.add('hidden');
+
+            const currentQ = questionPool[0];
+            questionText.innerText = currentQ.stem;
+
+            // Gather and shuffle options
+            const options = [currentQ.correct, ...currentQ.incorrect];
+            shuffle(options);
+
+            optionsContainer.innerHTML = '';
+            options.forEach(optText => {
+                const button = document.createElement('button');
+                button.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition duration-150 font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500";
+                button.innerText = optText;
+                button.onclick = () => handleAnswerSelection(button, optText, currentQ);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Process Choice
+        function handleAnswerSelection(selectedButton, selectedText, currentQ) {
+            if (isAnswered) return; // Prevent multiple clicks
+            isAnswered = true;
+
+            const isCorrect = (selectedText === currentQ.correct);
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                // Highlight the correct answer in green
+                if (btn.innerText === currentQ.correct) {
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-semibold transition duration-150";
+                } else if (btn === selectedButton && !isCorrect) {
+                    // Highlight selected incorrect answer in red
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-rose-300 bg-rose-50 text-rose-800 font-semibold transition duration-150";
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-medium transition duration-150";
+                }
+            });
+
+            // Adjust Pool and Progress
+            if (isCorrect) {
+                // Correct answer removes it from pool and increments mastered progress
+                questionPool.shift();
+                masteredCount++;
+                
+                feedbackPanel.className = "p-4 rounded-xl mb-6 border border-emerald-200 bg-emerald-50 text-emerald-900 transition-all duration-300";
+                feedbackIcon.innerText = "✨";
+                feedbackTitle.innerText = "Correct!";
+            } else {
+                // Incorrect answer: Rotate current question to the back of the queue
+                const missed = questionPool.shift();
+                questionPool.push(missed);
+
+                feedbackPanel.className = "p-4 rounded-xl mb-6 border border-amber-200 bg-amber-50 text-amber-900 transition-all duration-300";
+                feedbackIcon.innerText = "💡";
+                feedbackTitle.innerText = "Let's review this concept:";
+            }
+
+            // Set Rationale content and update display
+            feedbackText.innerText = currentQ.rationale;
+            feedbackPanel.classList.remove('hidden');
+            
+            // Setup action button
+            actionBtn.innerText = isCorrect ? "Next Question" : "Keep Going";
+            actionBtn.classList.remove('hidden');
+            updateProgress();
+        }
+
+        // Completion screen transition
+        function showCompletion() {
+            quizScreen.classList.add('hidden');
+            completionScreen.classList.remove('hidden');
+        }
+
+        // Action controls
+        actionBtn.onclick = () => {
+            loadNextQuestion();
+        };
+
+        restartBtn.onclick = () => {
+            initReviewer();
+        };
+
+        // Initialize on load
+        window.onload = initReviewer;
+    </script>
+</body>
+</html>
